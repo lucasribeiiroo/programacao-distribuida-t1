@@ -73,12 +73,12 @@ public class Jogador extends UnicastRemoteObject implements JogadorInterface {
                     break;
                 }
                 double desistencia = Math.random() * 100;
-				if (desistencia <= 1) {
-                jogo.desiste(playerId);
-				} else {					
-                System.out.printf("Jogada numero %d%n", i + 1);
-                jogo.joga(playerId);
-				}
+                if (desistencia <= 1) {
+                    jogo.desiste(playerId);
+                } else {
+                    System.out.printf("Jogada numero %d%n", i + 1);
+                    jogo.joga(playerId);
+                }
                 Random random = new Random();
                 int time = random.nextInt(701) + 250;
                 Thread.sleep(time);
@@ -104,8 +104,8 @@ public class Jogador extends UnicastRemoteObject implements JogadorInterface {
 
     public void verifica() throws RemoteException {
         if (quit)
-            System.out.println("Jogador está inativo");
+            System.out.println("Jogador esta inativo");
         else
-            System.out.println("Jogador não está inativo");
+            System.out.println("Jogador nao esta inativo");
     }
 }
