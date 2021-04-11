@@ -16,7 +16,7 @@ public class Jogo extends UnicastRemoteObject implements JogoInterface {
 
     private static Boolean started = false;
 
-    private static int numberOfPlayers = 3;
+    private static int numberOfPlayers = 1;
 
     public Jogo() throws RemoteException {
     }

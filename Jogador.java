@@ -70,9 +70,6 @@ public class Jogador extends UnicastRemoteObject implements JogadorInterface {
         for (int i = 0; i < 50; i++) {
             //try {
             try {
-                if (quit) {
-                    break;
-                }
                 System.out.printf("Jogada numero %d%n", i + 1);
                 jogo.joga(playerId);
                 //logo.joga(playerId);
