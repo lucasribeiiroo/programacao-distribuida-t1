@@ -70,6 +70,12 @@ public class Jogo extends UnicastRemoteObject implements JogoInterface {
                                 Thread thread = new Thread(() -> {
                                     try {
                                         jogador.inicia();
+                                        // TODO: ajustar probabilidade pra 3%, pq assim ta 30%
+                                        double bonificacao = Math.random();
+                                        System.out.println("Probabilidade de bonificacao gerada:" + bonificacao);
+                                        if(bonificacao <= 0.3) {
+                                            jogador.bonifica();
+                                        }
                                     } catch (RemoteException e) {
                                         e.printStackTrace();
                                     }
