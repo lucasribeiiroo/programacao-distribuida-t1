@@ -100,9 +100,4 @@ public class Jogo extends UnicastRemoteObject implements JogoInterface {
         players.put(clientId, clientHost);
         return clientId;
     }
-
-    @Override
-    public void bonifica(int id) {
-        System.out.println("Registrando bonificação do jogador: " + id);
-    }
 }

@@ -105,6 +105,5 @@ public class Jogador extends UnicastRemoteObject implements JogadorInterface {
                 .append("Jogador ")
                 .append(playerId)
                 .append(" Bonificado"));
-        jogo.bonifica(playerId);
     }
 }
