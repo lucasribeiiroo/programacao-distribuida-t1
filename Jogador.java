@@ -74,7 +74,7 @@ public class Jogador extends UnicastRemoteObject implements JogadorInterface {
                 }
                 double desistencia = Math.random() * 100;
 				if (desistencia <= 1) {
-                jogador.desiste();
+                jogo.desiste();
 				} else {					
                 System.out.printf("Jogada numero %d%n", i + 1);
                 jogo.joga(playerId);
