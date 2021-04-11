@@ -1,4 +1,6 @@
+import java.net.MalformedURLException;
 import java.rmi.Naming;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
@@ -13,6 +15,8 @@ public class Jogo extends UnicastRemoteObject implements JogoInterface {
     private static Timer mainTimer = new Timer();
 
     private static Map<Integer, String> players = new HashMap<>();
+    private static Map<Integer, String> playerLocation = new HashMap<>();
+
 
     private static Boolean started = false;
 
@@ -65,12 +69,14 @@ public class Jogo extends UnicastRemoteObject implements JogoInterface {
                             try {
                                 String connectLocation = "//" + value + "/Jogador/" + key;
                                 JogadorInterface jogador = (JogadorInterface) Naming.lookup(connectLocation);
+                                playerLocation.put(key, connectLocation);
                                 Thread thread = new Thread(() -> {
                                     try {
                                         jogador.inicia();
                                     } catch (RemoteException e) {
                                         e.printStackTrace();
                                     }
+                                    finaliza(key);
                                 });
                                 thread.start();
                             } catch (Exception e) {
@@ -103,9 +109,30 @@ public class Jogo extends UnicastRemoteObject implements JogoInterface {
         double bonificacao = Math.random() * 100;
         System.out.println("Probabilidade de bonificacao gerada:" + bonificacao);
         if (bonificacao <= 3) {
-            System.out.println("Jogador " + id + " Bonificado");
+            System.out.println(" WOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOW Jogador " + id + " Bonificado WOOOOOOOOOOOOOOOOOOOOOOOOOW");
+
+            String connectLocation = playerLocation.get(id);
+            try {
+                JogadorInterface jogador = (JogadorInterface) Naming.lookup(connectLocation);
+                jogador.bonifica();
+            } catch (MalformedURLException | RemoteException | NotBoundException e) {
+                e.printStackTrace();
+            }
         }
         System.out.println("Jogador id: " + id + " jogou");
+        return id;
+    }
+
+    private static int finaliza(int id) {
+        String connectLocation = playerLocation.get(id);
+        try {
+            System.out.printf("Jogador %d foi encerrado!%n", id);
+            JogadorInterface jogador = (JogadorInterface) Naming.lookup(connectLocation);
+            jogador.finaliza();
+        } catch (MalformedURLException | RemoteException | NotBoundException e) {
+            e.printStackTrace();
+        }
+        players.remove(id);
         return id;
     }
 }

@@ -68,17 +68,12 @@ public class Jogador extends UnicastRemoteObject implements JogadorInterface {
     @Override
     public void inicia() {
         for (int i = 0; i < 50; i++) {
-            //try {
             try {
                 if (quit) {
                     break;
                 }
                 System.out.printf("Jogada numero %d%n", i + 1);
                 jogo.joga(playerId);
-                //logo.joga(playerId);
-                //} catch (RemoteException e) {
-                //  e.printStackTrace();
-                //}
                 Random random = new Random();
                 int time = random.nextInt(1001) + 500;
                 Thread.sleep(time);
@@ -86,19 +81,18 @@ public class Jogador extends UnicastRemoteObject implements JogadorInterface {
                 e.printStackTrace();
             }
         }
-        // encerra
-        //try {
-        //    jogo.encerra(playerId);
-        //} catch (RemoteException e) {
-        //    e.printStackTrace();
-        //}
+        finaliza();
     }
 
-    @Override
     public void bonifica() throws RemoteException {
         System.out.println(new StringBuilder()
                 .append("Jogador ")
                 .append(playerId)
                 .append(" Bonificado"));
+    }
+
+    public void finaliza() {
+        System.out.println("Jogador " + playerId + " finalizou suas jogadas");
+        quit = true;
     }
 }
