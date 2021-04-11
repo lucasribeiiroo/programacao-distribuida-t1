@@ -75,7 +75,7 @@ public class Jogador extends UnicastRemoteObject implements JogadorInterface {
                 System.out.printf("Jogada numero %d%n", i + 1);
                 jogo.joga(playerId);
                 Random random = new Random();
-                int time = random.nextInt(1001) + 500;
+                int time = random.nextInt(701) + 250;
                 Thread.sleep(time);
             } catch (InterruptedException | RemoteException e) {
                 e.printStackTrace();

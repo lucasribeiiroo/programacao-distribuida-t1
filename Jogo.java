@@ -105,27 +105,19 @@ public class Jogo extends UnicastRemoteObject implements JogoInterface {
     }
 
     public int joga(int id) throws RemoteException {
-        new Timer().scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                if (!started || players.size() > 0) {
-                    try {
-                        String connectLocation = playerLocation.get(id);
-                        JogadorInterface jogador = (JogadorInterface) Naming.lookup(connectLocation);
-                        double bonificacao = Math.random() * 100;
-                        System.out.println("Probabilidade de bonificacao gerada:" + bonificacao);
-                        if (bonificacao <= 3) {
-                            jogador.bonifica();
-                        }
-                        System.out.println("Jogador id: " + id + " jogou");
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                } else {
-                    throw new RuntimeException("Stopping task");
-                }
+        String connectLocation = playerLocation.get(id);
+        try {
+            JogadorInterface jogador = (JogadorInterface) Naming.lookup(connectLocation);
+
+            double bonificacao = Math.random() * 100;
+            System.out.println("Probabilidade de bonificacao gerada:" + bonificacao);
+            if (bonificacao <= 3) {
+                jogador.bonifica();
             }
-        }, 0, 700);
+            System.out.println("Jogador id: " + id + " jogou");
+        } catch (NotBoundException | MalformedURLException e) {
+            e.printStackTrace();
+        }
         return id;
     }
 
