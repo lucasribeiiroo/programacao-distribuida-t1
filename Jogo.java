@@ -1,7 +1,10 @@
+import java.net.MalformedURLException;
 import java.rmi.Naming;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
 import java.rmi.registry.LocateRegistry;
+import java.rmi.server.UnicastRemoteObject;
+import java.util.*;
 
 public class Jogo extends UnicastRemoteObject implements JogoInterface {
 	private static String clientHost = "localhost";
@@ -21,7 +24,6 @@ public class Jogo extends UnicastRemoteObject implements JogoInterface {
 	}
 	
 	 public static void main(String[] args) {
-        Sound.tossacoin.loop();
         if (args.length != 2) {
             System.out.println("Usage: java Jogo <ip servidor> <quantidade de jogadores>");
             System.exit(1);
@@ -48,19 +50,6 @@ public class Jogo extends UnicastRemoteObject implements JogoInterface {
             System.out.println("Server failed: " + e);
         }
         verifyPlayers();
-    }
-	
-	public int registra() {
-	  try {
-            clientHost = getClientHost();
-            System.out.println(clientHost);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        int clientId = random.nextInt(100);
-        System.out.printf("Registro do cliente %d!%n", clientId);
-        players.put(clientId, clientHost);
-        return clientId;
     }
     
     private static void verifyPlayers() {

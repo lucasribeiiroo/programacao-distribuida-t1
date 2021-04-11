@@ -1,5 +1,3 @@
-package com.company;
-
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -65,5 +63,33 @@ public class Jogador extends UnicastRemoteObject implements JogadorInterface {
         } catch (Exception e) {
             System.out.println("Jogador Serverfailed: " + e);
         }
-    }   
+    }
+    
+     @Override
+    public void inicia() {
+        for (int i = 0; i < 50; i++) {
+            //try {
+                if (quit) {
+                    break;
+                }
+                System.out.printf("Jogada numero %d%n", i + 1);
+                //logo.joga(playerId);
+            //} catch (RemoteException e) {
+              //  e.printStackTrace();
+            //}
+            try {
+                Random random = new Random();
+                int time = random.nextInt(1001) + 500;
+                Thread.sleep(time);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        // encerra
+        //try {
+        //    jogo.encerra(playerId);
+        //} catch (RemoteException e) {
+        //    e.printStackTrace();
+        //}
+    } 
 }
