@@ -3,17 +3,17 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.rmi.registry.LocateRegistry;
 
-public class AdditionServer extends UnicastRemoteObject implements AdditionInterfaceServer {
+public class Jogo extends UnicastRemoteObject implements JogoInterface {
 	private static volatile int result;
 	private static volatile boolean changed;
 	private static volatile String remoteHostName;
 
-	public AdditionServer() throws RemoteException {
+	public Jogo() throws RemoteException {
 	}
 	
 	public static void main(String[] args) throws RemoteException {
 		if (args.length != 1) {
-			System.out.println("Usage: java AdditionServer <server ip>");
+			System.out.println("Usage: java Jogo <server ip>");
 			System.exit(1);
 		}
 
@@ -27,10 +27,10 @@ public class AdditionServer extends UnicastRemoteObject implements AdditionInter
 
 		try {
 			String server = "rmi://" + args[0] + ":52369/Hello";
-			Naming.rebind(server, new AdditionServer());
-			System.out.println("Addition Server is ready.");
+			Naming.rebind(server, new Jogo());
+			System.out.println("Jogo Server is ready.");
 		} catch (Exception e) {
-			System.out.println("Addition Serverfailed: " + e);
+			System.out.println("Jogo Serverfailed: " + e);
 		}
 		
 		while (true) {
@@ -39,10 +39,10 @@ public class AdditionServer extends UnicastRemoteObject implements AdditionInter
 
 				String connectLocation = "rmi://" + remoteHostName + ":52369/Hello2";
 
-				AdditionInterfaceClient hello2 = null;
+				JogadorInterface hello2 = null;
 				try {
 					System.out.println("Calling client back at : " + connectLocation);
-					hello2 = (AdditionInterfaceClient) Naming.lookup(connectLocation);
+					hello2 = (JogadorInterface) Naming.lookup(connectLocation);
 				} catch (Exception e) {
 					System.out.println ("Callback failed: ");
 					e.printStackTrace();
