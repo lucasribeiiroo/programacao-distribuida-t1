@@ -150,5 +150,6 @@ public class Jogo extends UnicastRemoteObject implements JogoInterface {
     
     public int desiste(int id){
 		System.out.println("Jogador " + id + " desistiu da jogada");
+		return id;
 	}
 }
