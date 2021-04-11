@@ -1,6 +1,4 @@
-import java.net.MalformedURLException;
 import java.rmi.Naming;
-import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
@@ -99,5 +97,15 @@ public class Jogo extends UnicastRemoteObject implements JogoInterface {
         System.out.printf("Registro do cliente %d!%n", clientId);
         players.put(clientId, clientHost);
         return clientId;
+    }
+
+    public int joga(int id) throws RemoteException {
+        double bonificacao = Math.random() * 100;
+        System.out.println("Probabilidade de bonificacao gerada:" + bonificacao);
+        if (bonificacao <= 3) {
+            System.out.println("Jogador " + id + " Bonificado");
+        }
+        System.out.println("Jogador id: " + id + " jogou");
+        return id;
     }
 }

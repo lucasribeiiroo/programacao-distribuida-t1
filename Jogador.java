@@ -74,12 +74,7 @@ public class Jogador extends UnicastRemoteObject implements JogadorInterface {
                     break;
                 }
                 System.out.printf("Jogada numero %d%n", i + 1);
-                // TODO: ajustar probabilidade pra 3%, pq assim ta 30%
-                double bonificacao = Math.random();
-                System.out.println("Probabilidade de bonificacao gerada:" + bonificacao);
-                if (bonificacao <= 0.3) {
-                    bonifica();
-                }
+                jogo.joga(playerId);
                 //logo.joga(playerId);
                 //} catch (RemoteException e) {
                 //  e.printStackTrace();
