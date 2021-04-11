@@ -11,7 +11,6 @@ public class Jogo extends UnicastRemoteObject implements JogoInterface {
 
     private final Random random = new Random();
 
-    private static Timer pokeTimer = new Timer();
     private static Timer mainTimer = new Timer();
 
     private static Map<Integer, String> players = new HashMap<>();
@@ -106,7 +105,7 @@ public class Jogo extends UnicastRemoteObject implements JogoInterface {
     }
 
     public int joga(int id) throws RemoteException {
-        pokeTimer.scheduleAtFixedRate(new TimerTask() {
+        new Timer().scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
                 if (!started || players.size() > 0) {
