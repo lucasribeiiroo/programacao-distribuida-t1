@@ -60,7 +60,7 @@ public class Jogo extends UnicastRemoteObject implements JogoInterface {
             @Override
             public void run() {
                 try {
-                    String[] connections = (String[]) playerLocation.values().toArray();
+                    String[] connections = playerLocation.values().toArray(new String[0]);
                     for (int i = 0; i < connections.length; i++) {
                         try {
                             JogadorInterface jogador = (JogadorInterface) Naming.lookup(connections[i]);
