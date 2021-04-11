@@ -69,6 +69,9 @@ public class Jogador extends UnicastRemoteObject implements JogadorInterface {
     public void inicia() {
         for (int i = 0; i < 50; i++) {
             try {
+				if (quit) {
+                    break;
+                }
                 System.out.printf("Jogada numero %d%n", i + 1);
                 jogo.joga(playerId);
                 Random random = new Random();
