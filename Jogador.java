@@ -101,6 +101,6 @@ public class Jogador extends UnicastRemoteObject implements JogadorInterface {
         if (quit)
             System.out.println("Jogador está inativo");
         else
-            System.out.println("Jogador está inativo");
+            System.out.println("Jogador não está inativo");
     }
 }
