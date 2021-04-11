@@ -75,7 +75,6 @@ public class Jogo extends UnicastRemoteObject implements JogoInterface {
                                     } catch (RemoteException e) {
                                         e.printStackTrace();
                                     }
-                                    finaliza(key);
                                 });
                                 thread.start();
                             } catch (Exception e) {
@@ -121,15 +120,7 @@ public class Jogo extends UnicastRemoteObject implements JogoInterface {
         return id;
     }
 
-    private static int finaliza(int id) {
-        String connectLocation = playerLocation.get(id);
-        try {
-            System.out.printf("Jogador %d foi encerrado!%n", id);
-            JogadorInterface jogador = (JogadorInterface) Naming.lookup(connectLocation);
-            jogador.finaliza();
-        } catch (MalformedURLException | RemoteException | NotBoundException e) {
-            e.printStackTrace();
-        }
+    public int finaliza(int id) {
         players.remove(id);
         return id;
     }
