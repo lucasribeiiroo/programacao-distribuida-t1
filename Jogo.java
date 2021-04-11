@@ -109,17 +109,21 @@ public class Jogo extends UnicastRemoteObject implements JogoInterface {
         pokeTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                try {
-                    String connectLocation = playerLocation.get(id);
-                    JogadorInterface jogador = (JogadorInterface) Naming.lookup(connectLocation);
-                    double bonificacao = Math.random() * 100;
-                    System.out.println("Probabilidade de bonificacao gerada:" + bonificacao);
-                    if (bonificacao <= 3) {
-                        jogador.bonifica();
+                if (!started) {
+                    try {
+                        String connectLocation = playerLocation.get(id);
+                        JogadorInterface jogador = (JogadorInterface) Naming.lookup(connectLocation);
+                        double bonificacao = Math.random() * 100;
+                        System.out.println("Probabilidade de bonificacao gerada:" + bonificacao);
+                        if (bonificacao <= 3) {
+                            jogador.bonifica();
+                        }
+                        System.out.println("Jogador id: " + id + " jogou");
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                    System.out.println("Jogador id: " + id + " jogou");
-                } catch (Exception e) {
-                    e.printStackTrace();
+                } else {
+                    throw new RuntimeException("Stopping task");
                 }
             }
         }, 0, 700);
