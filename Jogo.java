@@ -7,7 +7,7 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
 
 public class Jogo extends UnicastRemoteObject implements JogoInterface {
-	private static String clientHost = "localhost";
+    private static String clientHost = "localhost";
 
     private final Random random = new Random();
 
@@ -20,10 +20,10 @@ public class Jogo extends UnicastRemoteObject implements JogoInterface {
 
     private static int numberOfPlayers = 3;
 
-	public Jogo() throws RemoteException {
-	}
-	
-	 public static void main(String[] args) {
+    public Jogo() throws RemoteException {
+    }
+
+    public static void main(String[] args) {
         if (args.length != 2) {
             System.out.println("Usage: java Jogo <ip servidor> <quantidade de jogadores>");
             System.exit(1);
@@ -31,7 +31,7 @@ public class Jogo extends UnicastRemoteObject implements JogoInterface {
 
         try {
             numberOfPlayers = Integer.parseInt(args[1]);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -51,7 +51,7 @@ public class Jogo extends UnicastRemoteObject implements JogoInterface {
         }
         verifyPlayers();
     }
-    
+
     private static void verifyPlayers() {
         mainTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
@@ -70,12 +70,6 @@ public class Jogo extends UnicastRemoteObject implements JogoInterface {
                                 Thread thread = new Thread(() -> {
                                     try {
                                         jogador.inicia();
-                                        // TODO: ajustar probabilidade pra 3%, pq assim ta 30%
-                                        double bonificacao = Math.random();
-                                        System.out.println("Probabilidade de bonificacao gerada:" + bonificacao);
-                                        if(bonificacao <= 0.3) {
-                                            jogador.bonifica();
-                                        }
                                     } catch (RemoteException e) {
                                         e.printStackTrace();
                                     }
@@ -93,7 +87,7 @@ public class Jogo extends UnicastRemoteObject implements JogoInterface {
             }
         }, 0, 700);
     }
-    
+
     public int registra() {
         try {
             clientHost = getClientHost();
@@ -105,5 +99,10 @@ public class Jogo extends UnicastRemoteObject implements JogoInterface {
         System.out.printf("Registro do cliente %d!%n", clientId);
         players.put(clientId, clientHost);
         return clientId;
+    }
+
+    @Override
+    public void bonifica(int id) {
+        System.out.println("Registrando bonificação do jogador: " + id);
     }
 }

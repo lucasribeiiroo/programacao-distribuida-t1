@@ -69,19 +69,25 @@ public class Jogador extends UnicastRemoteObject implements JogadorInterface {
     public void inicia() {
         for (int i = 0; i < 50; i++) {
             //try {
-            if (quit) {
-                break;
-            }
-            System.out.printf("Jogada numero %d%n", i + 1);
-            //logo.joga(playerId);
-            //} catch (RemoteException e) {
-            //  e.printStackTrace();
-            //}
             try {
+                if (quit) {
+                    break;
+                }
+                System.out.printf("Jogada numero %d%n", i + 1);
+                // TODO: ajustar probabilidade pra 3%, pq assim ta 30%
+                double bonificacao = Math.random();
+                System.out.println("Probabilidade de bonificacao gerada:" + bonificacao);
+                if (bonificacao <= 0.3) {
+                    bonifica();
+                }
+                //logo.joga(playerId);
+                //} catch (RemoteException e) {
+                //  e.printStackTrace();
+                //}
                 Random random = new Random();
                 int time = random.nextInt(1001) + 500;
                 Thread.sleep(time);
-            } catch (InterruptedException e) {
+            } catch (InterruptedException | RemoteException e) {
                 e.printStackTrace();
             }
         }
@@ -99,5 +105,6 @@ public class Jogador extends UnicastRemoteObject implements JogadorInterface {
                 .append("Jogador ")
                 .append(playerId)
                 .append(" Bonificado"));
+        jogo.bonifica(playerId);
     }
 }
