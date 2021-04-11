@@ -60,15 +60,17 @@ public class Jogo extends UnicastRemoteObject implements JogoInterface {
             @Override
             public void run() {
                 try {
-                    playerLocation.forEach((integer, connectLocation) -> {
+                    String[] connections = (String[]) playerLocation.values().toArray();
+                    for (int i = 0; i < connections.length; i++) {
                         try {
-                            JogadorInterface jogador = (JogadorInterface) Naming.lookup(connectLocation);
+                            JogadorInterface jogador = (JogadorInterface) Naming.lookup(connections[i]);
                             jogador.verifica();
                         } catch (NotBoundException | MalformedURLException | RemoteException e) {
                             e.printStackTrace();
                         }
-                    });
-                    Thread.sleep(5000);
+                        Thread.sleep(5000);
+                    }
+
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -147,9 +149,9 @@ public class Jogo extends UnicastRemoteObject implements JogoInterface {
         players.remove(id);
         return id;
     }
-    
-    public int desiste(int id){
-		System.out.println("Jogador " + id + " desistiu da jogada");
-		return id;
-	}
+
+    public int desiste(int id) {
+        System.out.println("Jogador " + id + " desistiu da jogada");
+        return id;
+    }
 }
