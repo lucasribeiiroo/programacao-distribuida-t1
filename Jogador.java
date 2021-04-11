@@ -96,4 +96,11 @@ public class Jogador extends UnicastRemoteObject implements JogadorInterface {
         quit = true;
         jogo.finaliza(playerId);
     }
+
+    public void verifica() throws RemoteException {
+        if (quit)
+            System.out.println("Jogador está inativo");
+        else
+            System.out.println("Jogador está inativo");
+    }
 }

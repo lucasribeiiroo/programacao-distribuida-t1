@@ -2,10 +2,11 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 public interface JogadorInterface extends Remote {
-    public void inicia() throws RemoteException;
+    void inicia() throws RemoteException;
 
-    public void bonifica() throws RemoteException;
+    void bonifica() throws RemoteException;
 
-    public void finaliza() throws RemoteException;
+    void finaliza() throws RemoteException;
 
+    void verifica() throws RemoteException;
 }

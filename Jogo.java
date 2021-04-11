@@ -51,6 +51,29 @@ public class Jogo extends UnicastRemoteObject implements JogoInterface {
             System.out.println("Server failed: " + e);
         }
         verifyPlayers();
+        verifica();
+    }
+
+    private static void verifica() {
+
+        mainTimer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                try {
+                    playerLocation.forEach((integer, connectLocation) -> {
+                        try {
+                            JogadorInterface jogador = (JogadorInterface) Naming.lookup(connectLocation);
+                            jogador.verifica();
+                        } catch (NotBoundException | MalformedURLException | RemoteException e) {
+                            e.printStackTrace();
+                        }
+                    });
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, 0, 700);
     }
 
     private static void verifyPlayers() {
