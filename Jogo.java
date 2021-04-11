@@ -4,72 +4,111 @@ import java.rmi.server.UnicastRemoteObject;
 import java.rmi.registry.LocateRegistry;
 
 public class Jogo extends UnicastRemoteObject implements JogoInterface {
-	private static volatile int result;
-	private static volatile boolean changed;
-	private static volatile String remoteHostName;
+	private static String clientHost = "localhost";
+
+    private final Random random = new Random();
+
+    private static Timer pokeTimer = new Timer();
+    private static Timer mainTimer = new Timer();
+
+    private static Map<Integer, String> players = new HashMap<>();
+
+    private static Boolean started = false;
+
+    private static int numberOfPlayers = 3;
 
 	public Jogo() throws RemoteException {
 	}
 	
-	public static void main(String[] args) throws RemoteException {
-		if (args.length != 1) {
-			System.out.println("Usage: java Jogo <server ip>");
-			System.exit(1);
-		}
+	 public static void main(String[] args) {
+        Sound.tossacoin.loop();
+        if (args.length != 2) {
+            System.out.println("Usage: java Jogo <ip servidor> <quantidade de jogadores>");
+            System.exit(1);
+        }
 
-		try {
-			System.setProperty("java.rmi.server.hostname", args[0]);
-			LocateRegistry.createRegistry(52369);
-			System.out.println("java RMI registry created.");
-		} catch (RemoteException e) {
-			System.out.println("java RMI registry already exists.");
-		}
+        try {
+            numberOfPlayers = Integer.parseInt(args[1]);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
-		try {
-			String server = "rmi://" + args[0] + ":52369/Hello";
-			Naming.rebind(server, new Jogo());
-			System.out.println("Jogo Server is ready.");
-		} catch (Exception e) {
-			System.out.println("Jogo Serverfailed: " + e);
-		}
-		
-		while (true) {
-			if (changed == true) {
-				changed = false;
+        try {
+            System.setProperty("java.rmi.server.hostname", args[0]);
+            LocateRegistry.createRegistry(1099);
+            System.out.println("java RMI registry created.");
+        } catch (RemoteException e) {
+            System.out.println("java RMI registry already exists.");
+        }
 
-				String connectLocation = "rmi://" + remoteHostName + ":52369/Hello2";
-
-				JogadorInterface hello2 = null;
-				try {
-					System.out.println("Calling client back at : " + connectLocation);
-					hello2 = (JogadorInterface) Naming.lookup(connectLocation);
-				} catch (Exception e) {
-					System.out.println ("Callback failed: ");
-					e.printStackTrace();
-				}
-
-				try {
-					hello2.Result(result);
-				} catch (RemoteException e) {
-					e.printStackTrace();
-				}
-			}
-			try {
-				Thread.sleep(100);
-			} catch (InterruptedException ex) {}
-		}
-	}
+        try {
+            Naming.rebind("Jogo", new Jogo());
+            System.out.println("Server is ready.");
+        } catch (Exception e) {
+            System.out.println("Server failed: " + e);
+        }
+        verifyPlayers();
+    }
 	
-	public int Add(int a, int b) {
-		result = a + b;
-		changed = true;
-		try {
-			remoteHostName = getClientHost();
-		} catch (Exception e) {
-			System.out.println ("Failed to get client IP");
-			e.printStackTrace();
-		}
-		
-		return 1;
-	}
+	public int registra() {
+	  try {
+            clientHost = getClientHost();
+            System.out.println(clientHost);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        int clientId = random.nextInt(100);
+        System.out.printf("Registro do cliente %d!%n", clientId);
+        players.put(clientId, clientHost);
+        return clientId;
+    }
+    
+    private static void verifyPlayers() {
+        mainTimer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                if (players.size() == 0) {
+                    started = false;
+                }
+                if (players.size() >= numberOfPlayers) {
+                    if (!started) {
+                        System.out.printf("There are %d players online%n", numberOfPlayers);
+                        System.out.println("Starting game....");
+                        players.forEach((key, value) -> {
+                            try {
+                                String connectLocation = "//" + value + "/Jogador/" + key;
+                                JogadorInterface jogador = (JogadorInterface) Naming.lookup(connectLocation);
+                                Thread thread = new Thread(() -> {
+                                    try {
+                                        jogador.inicia();
+                                    } catch (RemoteException e) {
+                                        e.printStackTrace();
+                                    }
+                                });
+                                thread.start();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        });
+                        started = true;
+                    }
+                } else {
+                    System.out.println("Waiting for players");
+                }
+            }
+        }, 0, 700);
+    }
+    
+    public int registra() {
+        try {
+            clientHost = getClientHost();
+            System.out.println(clientHost);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        int clientId = random.nextInt(100);
+        System.out.printf("Registro do cliente %d!%n", clientId);
+        players.put(clientId, clientHost);
+        return clientId;
+    }
 }

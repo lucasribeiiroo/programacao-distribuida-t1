@@ -1,68 +1,69 @@
+package com.company;
+
 import java.rmi.Naming;
 import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
 import java.rmi.registry.LocateRegistry;
+import java.rmi.server.UnicastRemoteObject;
+import java.util.Random;
 
 public class Jogador extends UnicastRemoteObject implements JogadorInterface {
-	private static volatile int i, j;
+    private static boolean quit = false;
 
-	public Jogador() throws RemoteException {
-	}
+    private static int playerId;
 
-	public static void main(String[] args) {
-		int result;
+    private static JogoInterface jogo = null;
 
-		if (args.length != 2) {
-			System.out.println("Usage: java Jogador <server ip> <client ip>");
-			System.exit(1);
-		}
-	
-		try {
-			System.setProperty("java.rmi.server.hostname", args[1]);
-			LocateRegistry.createRegistry(52369);
-			System.out.println("java RMI registry created.");
-		} catch (RemoteException e) {
-			System.out.println("java RMI registry already exists.");
-		}
+    private static boolean changed = false;
 
-		try {
-			String client = "rmi://" + args[1] + ":52369/Hello2";
-			Naming.rebind(client, new Jogador());
-			System.out.println("Jogo Server is ready.");
-		} catch (Exception e) {
-			System.out.println("Jogo Serverfailed: " + e);
-		}
+    public Jogador() throws RemoteException {
+    }
 
-		String remoteHostName = args[0];
-		String connectLocation = "rmi://" + remoteHostName + ":52369/Hello";
+    public static void main(String[] args) {
+        playerId = 0;
 
-		JogoInterface hello = null;
-		try {
-			System.out.println("Connecting to server at : " + connectLocation);
-			hello = (JogoInterface) Naming.lookup(connectLocation);
-		} catch (Exception e) {
-			System.out.println ("Jogador failed: ");
-			e.printStackTrace();
-		}
+        if (args.length != 2) {
+            System.out.println("Usage: java Jogador <ip local> <ip servidor>");
+            System.exit(1);
+        }
 
-		i = 1; j = 2;
+        try {
+            System.setProperty("java.rmi.server.hostname", args[0]);
+            LocateRegistry.createRegistry(1099);
+            System.out.println("java RMI registry created.");
+        } catch (RemoteException e) {
+            System.out.println("java RMI registry already exists.");
+        }
 
-		while (true) {
-			try {
-				hello.Add(i++, j++);
-				System.out.println("Call to server..." );
-			} catch (RemoteException e) {
-				e.printStackTrace();
-			}
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException ex) {}
-		}
-	}
-	
-	public int Result(int val) {
-		System.out.println("Called back, result is: " + val);
-		
-		return val;
-	}
+        try {
+            Naming.rebind("Jogador", new Jogador());
+            System.out.println("Jogador Server is ready.");
+        } catch (Exception e) {
+            System.out.println("Jogador Serverfailed: " + e);
+        }
+
+        String remoteHostName = args[1];
+        String connectLocation = "//" + remoteHostName + "/Jogo";
+
+        try {
+            System.out.println("Connecting to server at : " + connectLocation);
+            jogo = (JogoInterface) Naming.lookup(connectLocation);
+        } catch (Exception e) {
+            System.out.println("Jogador failed: ");
+            e.printStackTrace();
+        }
+
+        // registra
+        try {
+            playerId = jogo.registra();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        try {
+            Naming.rebind("Jogador/" + playerId, new Jogador());
+            System.out.println("Jogador address was rebinded to Jogador/" + playerId);
+        } catch (Exception e) {
+            System.out.println("Jogador Serverfailed: " + e);
+        }
+    }   
 }
