@@ -109,7 +109,7 @@ public class Jogo extends UnicastRemoteObject implements JogoInterface {
         pokeTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                if (!started) {
+                if (!started && players.size() == 0) {
                     try {
                         String connectLocation = playerLocation.get(id);
                         JogadorInterface jogador = (JogadorInterface) Naming.lookup(connectLocation);
