@@ -51,7 +51,6 @@ public class Jogo extends UnicastRemoteObject implements JogoInterface {
             System.out.println("Server failed: " + e);
         }
         verifyPlayers();
-        verifica();
     }
 
     private static void verifica() {
@@ -60,19 +59,13 @@ public class Jogo extends UnicastRemoteObject implements JogoInterface {
             @Override
             public void run() {
                 try {
-                    String[] connections = playerLocation.values().toArray(new String[0]);
-                    for (int i = 0; i < connections.length; i++) {
-                        try {
-                            JogadorInterface jogador = (JogadorInterface) Naming.lookup(connections[i]);
+                    for (int i = 0; i < playerLocation.values().size(); i++) {
+                            JogadorInterface jogador = (JogadorInterface) Naming.lookup((String) playerLocation.values().toArray()[i]);
                             jogador.verifica();
-                        } catch (NotBoundException | MalformedURLException | RemoteException e) {
-                            e.printStackTrace();
-                        }
-                        Thread.sleep(5000);
                     }
-
-                } catch (InterruptedException e) {
-                    System.out.println("Erro na thread de verificacao");
+                        Thread.sleep(5000);
+                    } catch (InterruptedException | RemoteException | NotBoundException | MalformedURLException e) {
+                    e.printStackTrace();
                 }
             }
         }, 0, 700);
@@ -89,6 +82,7 @@ public class Jogo extends UnicastRemoteObject implements JogoInterface {
                     if (!started) {
                         System.out.printf("There are %d players online%n", numberOfPlayers);
                         System.out.println("Starting game....");
+                        verifica();
                         players.forEach((key, value) -> {
                             try {
                                 String connectLocation = "//" + value + "/Jogador/" + key;
