@@ -72,7 +72,7 @@ public class Jogo extends UnicastRemoteObject implements JogoInterface {
                     }
 
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    System.out.println("Erro na thread de verificacao");
                 }
             }
         }, 0, 700);
