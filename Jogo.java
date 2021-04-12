@@ -50,6 +50,7 @@ public class Jogo extends UnicastRemoteObject implements JogoInterface {
         } catch (Exception e) {
             System.out.println("Server failed: " + e);
         }
+        verifica();
         verifyPlayers();
     }
 
@@ -82,7 +83,6 @@ public class Jogo extends UnicastRemoteObject implements JogoInterface {
                     if (!started) {
                         System.out.printf("There are %d players online%n", numberOfPlayers);
                         System.out.println("Starting game....");
-                        verifica();
                         players.forEach((key, value) -> {
                             try {
                                 String connectLocation = "//" + value + "/Jogador/" + key;
