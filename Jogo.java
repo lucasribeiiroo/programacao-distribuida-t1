@@ -59,9 +59,10 @@ public class Jogo extends UnicastRemoteObject implements JogoInterface {
         mainTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                playerLocation.values().forEach(s -> {
+                players.forEach((key, value) -> {
                     try {
-                        JogadorInterface jogador = (JogadorInterface) Naming.lookup(s);
+                        String connectLocation = "//" + value + "/Jogador/" + key;
+                        JogadorInterface jogador = (JogadorInterface) Naming.lookup(connectLocation);
                         jogador.verifica();
                     } catch (RemoteException | NotBoundException | MalformedURLException ignored) {
                     }
